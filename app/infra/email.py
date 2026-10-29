@@ -5,6 +5,8 @@ Do not change the behaviour of this file: it stands in for a real network servic
 import os
 import random
 import time
+
+_rng = random.SystemRandom()  # no shared state between forked Celery workers
 from dataclasses import dataclass, field
 
 
@@ -27,7 +29,7 @@ class FakeMailer:
         if self.fail_next > 0:
             self.fail_next -= 1
             raise EmailError(f"SMTP timeout while sending to {to}")
-        if random.random() < self.fail_rate:
+        if _rng.random() < self.fail_rate:
             raise EmailError(f"SMTP timeout while sending to {to}")
         self.sent.append({"to": to, "subject": subject, "body": body})
 

@@ -9,9 +9,9 @@ install:  ## install dependencies locally
 test:  ## run tests (no docker needed)
 	uv run pytest
 
-up:  ## start api, worker and redis (http://localhost:8000/docs)
+up:  ## start api, worker and redis (port: API_PORT=8001 make up)
 	docker compose up --build -d
-	@echo "api: http://localhost:8000/docs"
+	@echo "api: http://localhost:$${API_PORT:-8000}/docs"
 
 down:  ## stop everything
 	docker compose down

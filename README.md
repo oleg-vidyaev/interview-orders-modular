@@ -20,7 +20,7 @@ make install && make test   # tests run Celery tasks in-process, no Redis needed
 make up                     # api on http://localhost:8000/docs, worker, redis
 ```
 
-The api and the worker reload on code changes. In docker compose the fake SMTP fails 20% of the time (`FAKE_SMTP_FAIL_RATE`). All commands: `make help`.
+Port 8000 busy? Run `API_PORT=8001 make up`. The api and the worker reload on code changes. In docker compose the fake SMTP fails 20% of the time (`FAKE_SMTP_FAIL_RATE`). All commands: `make help`.
 
 ## Task
 
