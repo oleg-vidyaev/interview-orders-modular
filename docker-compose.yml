@@ -1,0 +1,31 @@
+x-app: &app
+  build: .
+  volumes:
+    - .:/app
+    - db:/data
+  environment:
+    DATABASE_URL: sqlite:////data/shop.db
+    REDIS_URL: redis://redis:6379/0
+    FAKE_SMTP_FAIL_RATE: "0.2"
+  depends_on:
+    - redis
+
+services:
+  redis:
+    image: redis:7.4-alpine
+    ports:
+      - "6379:6379"
+
+  api:
+    <<: *app
+    command: uv run uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    ports:
+      - "8000:8000"
+
+  worker:
+    <<: *app
+    # restarts on code changes, like uvicorn --reload
+    command: uv run watchfiles --filter python "celery -A app.worker worker --loglevel=info --concurrency=2" app
+
+volumes:
+  db:
